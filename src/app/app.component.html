@@ -1,0 +1,23 @@
+<div>
+  <mat-form-field class="example-full-width">
+    <mat-label>Choose language:-</mat-label>
+    <mat-select [(value)]="languageId" (selectionChange)="changeLanguage($event.value)">
+        <mat-option *ngFor="let language of languageLst" [value]="language.id">
+            {{language.name}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+</div>
+
+<nav class="navbar navbar-light bg-light">
+  <nav mat-tab-nav-bar mat-align-tabs="start">
+    <a mat-tab-link routerLink="/define-author"> Define Author </a>
+    <a mat-tab-link routerLink="/view-Authors"> View Authors </a>
+    <a mat-tab-link routerLink="/define-material"> Define Material </a>
+    <a mat-tab-link routerLink="/view-materials"> View Materials </a>
+  </nav>
+</nav>
+
+<div class="navbar-light bg-light">
+  <router-outlet></router-outlet>
+</div>

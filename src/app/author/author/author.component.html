@@ -1,0 +1,58 @@
+<form [formGroup]="authorGroup" class="example-form" (ngSubmit)="save()">
+    <mat-form-field class="example-full-width">
+        <mat-label>Arabic Name</mat-label>
+        <input matInput placeholder="Arabic Name" name="arabicName" [formControl]="authorGroup.get('arabicNameControl')" (keypress)="allowArabicCharactersOnly($event)">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <mat-label>English Name</mat-label>
+        <input matInput placeholder="Arabic Name" name="englishName" [formControl]="authorGroup.get('englishNameControl')" (keypress)="allowEnglishCharactersOnly($event)">
+    </mat-form-field>
+
+
+
+    <mat-form-field class="example-full-width">
+        <input type="text" placeholder="Choose University" [formControl]="authorGroup.get('universityControl')" aria-label="Number" matInput
+            [matAutocomplete]="universityObj">
+        <mat-autocomplete #universityObj="matAutocomplete" (optionSelected)='changeUniversity($event.option.id)'>
+            <mat-option *ngFor="let university of filteredUniversity | async" value="{{university.arabicName}} - {{university.englishName}}" [id]="university.id">
+                {{university.arabicName}} -  {{university.englishName}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <input type="text" placeholder="Choose Faculty" [formControl]="authorGroup.get('facultyControl')" aria-label="Number" matInput
+            [matAutocomplete]="facultyObj">
+        <mat-autocomplete #facultyObj="matAutocomplete" (optionSelected)='changeFaculty($event.option.id)'>
+            <mat-option *ngFor="let faculty of filteredFaculty | async" value="{{faculty.arabicName}} - {{faculty.englishName}}" [id]="faculty.id">
+                {{faculty.arabicName}} -  {{faculty.englishName}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <button mat-button color="warn" type="button" (click)="onClick()">
+        <mat-icon>file_upload</mat-icon>
+        Upload Image
+    </button>
+    <br />
+    <ul>
+        <li *ngFor="let file of files" [@fadeInOut]="file.state">
+            <mat-progress-bar [value]="file.progress"></mat-progress-bar>
+            <span id="file-label">
+                {{file.data.name}}
+                <a title="Retry" (click)="retryFile(file)" *ngIf="file.canRetry">
+                    <mat-icon>refresh</mat-icon>
+                </a>
+                <a title="Cancel" (click)="cancelFile(file)" *ngIf="file.canCancel">
+                    <mat-icon>cancel</mat-icon>
+                </a>
+            </span>
+        </li>
+    </ul>
+    <img [src]="url" height="200"> <br />
+    <input type="file" id="fileUpload" name="fileUpload" (change)="onSelectFile($event)" accept="image/*"
+        style="display:none;" />
+        <div class="example-button-row">
+        <button mat-stroked-button color="primary" type="submit" [disabled]="!authorGroup.valid || disableSave">Save</button>
+        </div>
+</form>
