@@ -32,8 +32,8 @@ export class AppComponent {
 
   constructor(private router: Router) {
     this.navId = this.navEnum.defineAuthor;
-    // localStorage.setItem("serverURL","http://ebookteam-001-site1.itempurl.com/");
-     localStorage.setItem("serverURL","http://localhost:2200/");
+    localStorage.setItem("serverURL","http://ebookteam-001-site1.itempurl.com/");
+    //  localStorage.setItem("serverURL","http://localhost:2200/");
  
     if (!localStorage.getItem("isArabic")) {
       localStorage.setItem("isArabic", "true");   
