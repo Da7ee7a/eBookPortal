@@ -2,19 +2,23 @@
   <mat-form-field class="example-full-width">
     <mat-label>Choose language:-</mat-label>
     <mat-select [(value)]="languageId" (selectionChange)="changeLanguage($event.value)">
-        <mat-option *ngFor="let language of languageLst" [value]="language.id">
-            {{language.name}}
-        </mat-option>
+      <mat-option *ngFor="let language of languageLst" [value]="language.id">
+        {{language.name}}
+      </mat-option>
     </mat-select>
-</mat-form-field>
+  </mat-form-field>
 </div>
 
 <nav class="navbar navbar-light bg-light">
   <nav mat-tab-nav-bar mat-align-tabs="start">
-    <a mat-tab-link routerLink="/define-author"> Define Author </a>
-    <a mat-tab-link routerLink="/view-Authors"> View Authors </a>
-    <a mat-tab-link routerLink="/define-material"> Define Material </a>
-    <a mat-tab-link routerLink="/view-materials"> View Materials </a>
+    <a mat-tab-link routerLink="/define-author" (click)="navId=navEnum.defineAuthor"
+      [active]="navEnum.defineAuthor == navId"> Define Author </a>
+    <a mat-tab-link routerLink="/view-Authors" (click)="navId=navEnum.viewAuthors"
+      [active]="navEnum.viewAuthors == navId"> View Authors </a>
+    <a mat-tab-link routerLink="/define-material" (click)="navId=navEnum.defineMaterial"
+      [active]="navEnum.defineMaterial == navId"> Define Material </a>
+    <a mat-tab-link routerLink="/view-materials" (click)="navId=navEnum.viewMaterial"
+      [active]="navEnum.viewMaterial == navId"> View Materials </a>
   </nav>
 </nav>
 

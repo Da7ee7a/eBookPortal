@@ -29,8 +29,8 @@ export class MaterialViewComponent implements OnInit {
   public pageSize: number = 0;
   public pageIndex: number = 0;
   public displayedColumns = ['name', 'universityName', 'facultyName','subjectName','stageName','noOfViews'];
-  public dateFromControl = new FormControl(new Date());
-  public dateToControl = new FormControl(new Date());
+  public dateFromControl = new FormControl();
+  public dateToControl = new FormControl();
   constructor(private service: MaterialService) { }
 
   ngOnInit(): void {
@@ -62,6 +62,7 @@ export class MaterialViewComponent implements OnInit {
 
 
   public doFilter = (value: string) => {
+    this.pageNo = 1;
     this.searchKey = value.trim().toLocaleLowerCase();
     this.getMaterials(this.pageNo, this.searchKey, this.isAscending, this.isArabic, this.sortColumn);
   }

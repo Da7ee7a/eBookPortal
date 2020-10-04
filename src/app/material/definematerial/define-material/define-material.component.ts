@@ -40,14 +40,14 @@ export class DefineMaterialComponent implements OnInit {
   public isArabic: boolean = true;
 
   public materialGroup = new FormGroup({
-    subjectControl: new FormControl('', [Validators.required]),
-    universityControl: new FormControl('', [Validators.required]),
-    facultyControl: new FormControl({ value: '', disabled: true }, [Validators.required]),
-    stageControl: new FormControl('', [Validators.required]),
-    authorControl: new FormControl({ value: '', disabled: true }, [Validators.required]),
+    subjectControl: new FormControl('', [Validators.required,this.noWhitespaceValidator]),
+    universityControl: new FormControl('', [Validators.required,this.noWhitespaceValidator]),
+    facultyControl: new FormControl({ value: '', disabled: true }, [Validators.required,this.noWhitespaceValidator]),
+    stageControl: new FormControl('', [Validators.required,this.noWhitespaceValidator]),
+    authorControl: new FormControl({ value: '', disabled: true }, [Validators.required,this.noWhitespaceValidator]),
     directionControl: new FormControl('', [Validators.required]),
-    arabicNameControl: new FormControl('', [Validators.required]),
-    englishNameControl: new FormControl('', [Validators.required])
+    arabicNameControl: new FormControl('', [Validators.required,Validators.minLength(2), Validators.maxLength(70), this.noWhitespaceValidator]),
+    englishNameControl: new FormControl('', [Validators.required,Validators.minLength(2), Validators.maxLength(70), this.noWhitespaceValidator])
   });
 
 
@@ -195,6 +195,7 @@ export class DefineMaterialComponent implements OnInit {
 
   private uploadImage(image: FileUploadModel) {
     debugger;
+    this.disableSave = true;
     const fd = new FormData();
     fd.append(this.param, image.data);
 
@@ -224,6 +225,7 @@ export class DefineMaterialComponent implements OnInit {
       .subscribe(
         (event: any) => {
           if (typeof (event) === 'object') {
+            this.disableSave = false;
             // this.removeFileFromArray(file);
             this.complete.emit(event.body);
           }
@@ -253,6 +255,7 @@ export class DefineMaterialComponent implements OnInit {
 
   private uploadFile(file: FileUploadModel) {
     debugger;
+    this.disableSave = true;
     const fd = new FormData();
     fd.append(this.param, file.data);
 
@@ -283,6 +286,7 @@ export class DefineMaterialComponent implements OnInit {
         (event: any) => {
           if (typeof (event) === 'object') {
             // this.removeFileFromArray(file);
+            this.disableSave = false;
             this.complete.emit(event.body);
           }
         }
@@ -346,6 +350,7 @@ export class DefineMaterialComponent implements OnInit {
 
   public changeUniversity(id): void {
     debugger;
+    this.disableSave = true;
     this.materialGroup.get('facultyControl').reset();
     this.materialGroup.get('facultyControl').disable();
     this.materialGroup.get('authorControl').disable();
@@ -364,6 +369,7 @@ export class DefineMaterialComponent implements OnInit {
         this.facultyLst = data.results;
         this.mapFacultyLst();
         this.materialGroup.get('facultyControl').enable();
+        this.disableSave = false;
       });
     }
   }
@@ -378,6 +384,7 @@ export class DefineMaterialComponent implements OnInit {
   }
 
   public changeFaculty(id): void {
+    this.disableSave = true;
     this.materialGroup.get('authorControl').disable();
     this.materialGroup.get('authorControl').reset();
     this.stageLst = [];
@@ -393,6 +400,7 @@ export class DefineMaterialComponent implements OnInit {
         this.authorLst = data;
         this.mapAuthorLst();
         this.materialGroup.get('authorControl').enable();
+        this.disableSave = false;
       });
     }
     else {
@@ -520,11 +528,20 @@ export class DefineMaterialComponent implements OnInit {
   }
 
   public allowEnglishCharactersOnly(event) {
-    var arregex = /^[a-z ]/;
+    var arregex = /^[a-z | A-Z ]/ ;
+
     if (!arregex.test(event.key)) {
       event.preventDefault();
     }
 
   }
+
+  public noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
+  }
+
+  
 
 }

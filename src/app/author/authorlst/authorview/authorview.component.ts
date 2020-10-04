@@ -55,6 +55,7 @@ export class AuthorviewComponent implements OnInit, AfterViewInit {
 
 
   public doFilter = (value: string) => {
+    this.pageNo = 1;
     this.searchKey = value.trim().toLocaleLowerCase();
     this.getAuthors(this.pageNo, this.searchKey, this.isAscending, this.isArabic, this.sortColumn);
   }

@@ -4,7 +4,7 @@ import { from, Subscription, Observable } from 'rxjs';
 import { HttpRequest, HttpClient, HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { trigger, state, transition, animate, style } from '@angular/animations';
-import { catchError, last, map, tap, startWith } from 'rxjs/operators';
+import { catchError, last, map, tap, startWith, min, max } from 'rxjs/operators';
 import { AuthorService } from './../../services/author.service';
 import { FormControl, Validators, FormGroup, FormGroupDirective } from '@angular/forms';
 import { SaveResult } from './../../enums/save-result.enum';
@@ -45,10 +45,10 @@ export class AuthorComponent implements OnInit {
   public disableSave: boolean = false;
 
   public authorGroup = new FormGroup({
-    universityControl: new FormControl('', [Validators.required]),
-    facultyControl: new FormControl({ value: '', disabled: true }, [Validators.required]),
-    arabicNameControl: new FormControl('', [Validators.required]),
-    englishNameControl: new FormControl('', [Validators.required])
+    universityControl: new FormControl(''),
+    facultyControl: new FormControl({ value: '', disabled: true }),
+    arabicNameControl: new FormControl('', [Validators.required,Validators.minLength(2), Validators.maxLength(70), this.noWhitespaceValidator]),
+    englishNameControl: new FormControl('', [Validators.required,Validators.minLength(2), Validators.maxLength(70), this.noWhitespaceValidator])
   });
 
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
@@ -125,6 +125,7 @@ export class AuthorComponent implements OnInit {
 
   private uploadFile(file: FileUploadModel) {
     debugger;
+    this.disableSave = true;
     const fd = new FormData();
     fd.append(this.param, file.data);
 
@@ -155,6 +156,7 @@ export class AuthorComponent implements OnInit {
         (event: any) => {
           if (typeof (event) === 'object') {
             // this.removeFileFromArray(file);
+            this.disableSave = false;
             this.complete.emit(event.body);
           }
         }
@@ -279,11 +281,17 @@ export class AuthorComponent implements OnInit {
   }
 
   public allowEnglishCharactersOnly(event) {
-    var arregex = /^[a-z ]/;
+    var arregex = /^[a-z | A-Z ]/ ;
     if (!arregex.test(event.key)) {
       event.preventDefault();
     }
 
+  }
+
+  public noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
   }
 }
 
